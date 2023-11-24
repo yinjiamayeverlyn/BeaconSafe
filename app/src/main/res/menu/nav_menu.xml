@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn = "navigation_view">
+
+    <group
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="@string/home"/>
+
+        <item
+            android:id="@+id/nav_notification"
+            android:icon="@drawable/ic_notification"
+            android:title="@string/notification"/>
+
+        <item
+            android:id="@+id/nav_education"
+            android:icon="@drawable/ic_module"
+            android:title="@string/education_module"/>
+
+        <item
+            android:id="@+id/nav_community"
+            android:icon="@drawable/ic_forum"
+            android:title="@string/community_forum"/>
+
+        <item
+            android:id="@+id/nav_chatsupport"
+            android:icon="@drawable/ic_chatsupport"
+            android:title="@string/chat_support"/>
+
+        <item
+            android:id="@+id/nav_legalaid"
+            android:icon="@drawable/ic_legalaidlocator"
+            android:title="@string/legal_aid_locator_contact"/>
+
+        <item
+            android:id="@+id/nav_feedback"
+            android:icon="@drawable/ic_feedback"
+            android:title="@string/feedback"/>
+    </group>
+    <item
+        android:title="">
+
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="@string/logout"/>
+        </menu>
+
+    </item>
+
+</menu>
