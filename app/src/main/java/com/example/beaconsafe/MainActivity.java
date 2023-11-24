@@ -5,7 +5,6 @@ import static com.example.beaconsafe.R.id.nav_home;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.concurrent.futures.CallbackToFutureAdapter;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -25,16 +24,18 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.Firebase;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -51,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DatabaseReference UserRef;
     public static final int main=0x7f030004;
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +66,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
+        //getSupportActionBar().setTitle("Home");
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.open_nav,R.string.close_nav);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
@@ -99,6 +101,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showBottomDialog();
             }
         });
+
+        FirebaseApp.initializeApp(this);
+
+
+        /*ImageButton sosButton = (ImageButton) findViewById(R.id.sosButton);
+        sosButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent emergencyActivity = new Intent(MainActivity.this, Emergency.class);
+                startActivity(emergencyActivity);
+            }
+        });*/
 
     }
     @Override
@@ -155,6 +169,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser == null){
             SendUserToLoginActivity();
+        }else{
+            //CheckUserExistence();
         }
     }
     private void SendUserToLoginActivity() {
@@ -163,7 +179,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(loginIntent);
         finish();
     }
-    private void CheckUserID(){
+
+    /*private void CheckUserExistence(){
         final String currentUserID= mAuth.getCurrentUser().getUid();
         UserRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -178,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
-
+*/
     private void SendUserToSetupActivity() {
         Intent setupIntent = new Intent(MainActivity.this, EditingProfile.class);
         setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -215,6 +232,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Toast.makeText(MainActivity.this, "Logout", Toast.LENGTH_SHORT).show();
             mAuth.signOut();
             SendUserToLoginActivity();
+        }else if (id==R.id.nav_sos){
+            Toast.makeText(MainActivity.this,"SOS",Toast.LENGTH_SHORT).show();
+
         }
         return false;
     }

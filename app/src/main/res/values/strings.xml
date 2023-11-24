@@ -12,6 +12,6 @@
     <string name="legal_aid_locator_contact">Legal Aid Locator/contact</string>
     <string name="logout">Logout</string>
     <string name="notification">Notification</string>
-
+    <string name="emergency_call">Emergency Call</string>
 
 </resources>

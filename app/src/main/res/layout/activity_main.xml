@@ -27,7 +27,18 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/frame_layout"/>
+            android:id="@+id/frame_layout">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/ic_report"
+                app:maxImageSize="40dp"
+                app:tint="@color/lavender"
+                android:layout_marginLeft="100dp"/>
+        </FrameLayout>
 
     </LinearLayout>
 
@@ -63,19 +74,11 @@
                 android:layout_marginEnd="20dp"
                 android:background="@android:color/transparent"
                 app:labelVisibilityMode="labeled"
-                app:menu="@menu/bottom_menu" />
+                app:menu="@menu/bottom_menu" >
+
+            </com.google.android.material.bottomnavigation.BottomNavigationView>
 
         </com.google.android.material.bottomappbar.BottomAppBar>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:src="@drawable/ic_report"
-            app:layout_anchor="@id/bottomAppBar"
-            app:maxImageSize="40dp"
-            android:id="@+id/fab"
-            app:tint="@color/lavender"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
