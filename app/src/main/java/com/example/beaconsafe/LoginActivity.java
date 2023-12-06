@@ -106,14 +106,16 @@ public class LoginActivity extends AppCompatActivity {
             mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
+                    loadingBar.dismiss();
+
                     if(task.isSuccessful()){
                         SendUserToMainActivity();
                         Toast.makeText(LoginActivity.this,"You are logged in successfully.",Toast.LENGTH_SHORT).show();
-                        loadingBar.dismiss();
+
                     }else{
                         String message = task.getException().getMessage();
                         Toast.makeText(LoginActivity.this,"Error message: "+ message+"......",Toast.LENGTH_SHORT).show();
-                        loadingBar.dismiss();
+
                     }
                 }
 

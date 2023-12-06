@@ -14,7 +14,10 @@
         />
 
     <item
-        android:title=""/>
+        android:id="@+id/report"
+        android:title="Report"
+        android:icon="@drawable/button"
+        />
 
     <item
         android:id="@+id/counselor"
