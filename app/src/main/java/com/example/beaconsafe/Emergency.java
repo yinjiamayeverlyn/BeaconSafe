@@ -38,12 +38,15 @@ public class Emergency extends AppCompatActivity {
 
     private String emergencyContactName;
     private String emergencyPhoneNumber;
+    private String currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        currentUserId = currentUser.getUid();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emergency);
-        fetchEmergencyContactInfo();
+        fetchEmergencyContactInfo(currentUserId);
         ImageButton sosButton = findViewById(R.id.sosButton);
         sosButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,45 +71,13 @@ public class Emergency extends AppCompatActivity {
             }
         });
 
-
-
         FirebaseApp.initializeApp(this);
 
         // Get the current authenticated user
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (currentUser != null) {
-            String currentUserId = currentUser.getUid();
 
-            // Assuming "emergencyContacts" is the node containing emergency contact information
-            DatabaseReference emergencyContactsRef = FirebaseDatabase.getInstance().getReference("emergencyContacts").child(currentUserId);
+        fetchEmergencyContactInfo(currentUser.getUid());
 
-            emergencyContactsRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        // Retrieve emergency contact information
-                        String contactName = dataSnapshot.child("Name").getValue(String.class);
-                        String contactPhoneNumber = dataSnapshot.child("PhoneNumber").getValue(String.class);
-
-                        // Use the retrieved data (e.g., display it in UI)
-                        Log.d(TAG, "Emergency Contact Name: " + contactName);
-                        Log.d(TAG, "Emergency Contact Phone Number: " + contactPhoneNumber);
-                    } else {
-                        // No emergency contact information found
-                        Log.d(TAG, "No emergency contact information found");
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.w(TAG, "Failed to read value.", error.toException());
-                }
-            });
-        } else {
-            // User is not authenticated, handle accordingly
-            Log.d(TAG, "User not authenticated");
-        }
 
         TextView changeContact = findViewById(R.id.cgEmerContact);
         changeContact.setPaintFlags(changeContact.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -138,21 +109,18 @@ public class Emergency extends AppCompatActivity {
                         String PhoneInput = InputContact.getText().toString();
 
                         // Update the emergency contact information in the Firebase Realtime Database
-                        if (currentUser != null) {
-                            String currentUserId = currentUser.getUid();
-                            DatabaseReference emergencyContactsRef = FirebaseDatabase.getInstance().getReference("emergencyContacts").child(currentUserId);
 
-                            // Update the values in the database
-                            emergencyContactsRef.child("Name").setValue(NameInput);
-                            emergencyContactsRef.child("PhoneNumber").setValue(PhoneInput);
+                        String currentUserId = currentUser.getUid();
+                        DatabaseReference emergencyContactsRef = FirebaseDatabase.getInstance().getReference("User").child(currentUserId);
 
-                            // Do something with the entered text, if needed
-                            Log.d(TAG, "Emergency Contact Name: " + NameInput);
-                            Log.d(TAG, "Emergency Contact Phone Number: " + PhoneInput);
-                        } else {
-                            // User is not authenticated, handle accordingly
-                            Log.d(TAG, "User not authenticated");
-                        }
+                        // Update the values in the database
+                        emergencyContactsRef.child("emergencyName").setValue(NameInput);
+                        emergencyContactsRef.child("emergencyContact").setValue(PhoneInput);
+
+                        // Do something with the entered text, if needed
+                        Log.d(TAG, "Emergency Contact Name: " + NameInput);
+                        Log.d(TAG, "Emergency Contact Phone Number: " + PhoneInput);
+
 
                         builder.dismiss();
 
@@ -171,7 +139,7 @@ public class Emergency extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         checkAndRequestPermissions();
-        fetchEmergencyContactInfo();
+        fetchEmergencyContactInfo(currentUserId);
     }
 
     private void checkAndRequestPermissions() {
@@ -195,40 +163,45 @@ public class Emergency extends AppCompatActivity {
         }
     }
 
-    private void fetchEmergencyContactInfo() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private void fetchEmergencyContactInfo(String userId) {
+        // Assuming "User" is the node containing user information
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(userId);
 
-        if (currentUser != null) {
-            String currentUserId = currentUser.getUid();
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                if (userSnapshot.exists()) {
+                    // Retrieve emergency contact information
+                    emergencyContactName = userSnapshot.child("emergencyName").getValue(String.class);
+                    emergencyPhoneNumber = userSnapshot.child("emergencyContact").getValue(String.class);
 
-            // Assuming "emergencyContacts" is the node containing emergency contact information
-            DatabaseReference emergencyContactsRef = FirebaseDatabase.getInstance().getReference("emergencyContacts").child(currentUserId);
+                    // Update UI with the retrieved data
+                    updateUIWithEmergencyContact(emergencyContactName, emergencyPhoneNumber);
 
-            emergencyContactsRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        // Retrieve emergency contact information
-                        emergencyContactName = dataSnapshot.child("Name").getValue(String.class);
-                        emergencyPhoneNumber = dataSnapshot.child("PhoneNumber").getValue(String.class);
-
-                        // Other actions if needed
-                        Log.d(TAG, "Emergency Contact Name: " + emergencyContactName);
-                        Log.d(TAG, "Emergency Contact Phone Number: " + emergencyPhoneNumber);
-                    } else {
-                        // No emergency contact information found
-                        Log.d(TAG, "No emergency contact information found");
-                    }
+                    // Other actions if needed
+                    Log.d(TAG, "Emergency Contact Name: " + emergencyContactName);
+                    Log.d(TAG, "Emergency Contact Phone Number: " + emergencyPhoneNumber);
+                } else {
+                    // No user data found
+                    Log.d(TAG, "No user data found");
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.w(TAG, "Failed to read value.", error.toException());
-                }
-            });
-        } else {
-            // User is not authenticated, handle accordingly
-            Log.d(TAG, "User not authenticated");
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
     }
+
+    private void updateUIWithEmergencyContact(String name, String phoneNumber) {
+        // Update TextViews with the retrieved data
+        TextView contactNameTextView = findViewById(R.id.ContactName);
+        TextView contactNumberTextView = findViewById(R.id.ContactNumber);
+
+        contactNameTextView.setText(name);
+        contactNumberTextView.setText(phoneNumber);
+    }
+
+
 }

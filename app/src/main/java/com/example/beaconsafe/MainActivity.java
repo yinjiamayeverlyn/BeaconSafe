@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     BottomNavigationView bottomNavigationView;
     private FirebaseAuth mAuth;
-    private DatabaseReference UserRef;
+    private DatabaseReference UserRef = FirebaseDatabase.getInstance().getReference().child("User");
     public static final int main=0x7f030004;
 
     @Override
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        UserRef = FirebaseDatabase.getInstance().getReference().child("User");
+
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         fab = findViewById(R.id.fab);;
@@ -91,6 +91,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 replaceFragment(new CounselorFragment());
             }else if(id ==R.id.profile){
                 replaceFragment(new ProfileFragment());
+            } else if (id == R.id.sosButton) {
+                Intent sos = new Intent(MainActivity.this,Emergency.class);
+                startActivity(sos);
             }
             return true;
         });
@@ -143,8 +146,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         reporting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent ToReport = new Intent(MainActivity.this,Reporting_User.class);
                 dialog.dismiss();
                 Toast.makeText(MainActivity.this,"Reporting is clicked",Toast.LENGTH_SHORT).show();
+                startActivity(ToReport);
 
             }
         });
@@ -167,10 +172,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart(){
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null){
+        if(mAuth == null || currentUser == null){
             SendUserToLoginActivity();
         }else{
-            //CheckUserExistence();
+            CheckUserDataExistence();
         }
     }
     private void SendUserToLoginActivity() {
@@ -180,7 +185,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         finish();
     }
 
-    /*private void CheckUserExistence(){
+    /*
+    private void CheckUserExistence(){
         final String currentUserID= mAuth.getCurrentUser().getUid();
         UserRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -194,14 +200,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
+    }*/
+
+    private void CheckUserDataExistence() {
+        final String currentUserID = mAuth.getCurrentUser().getUid();
+
+        UserRef.child(currentUserID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // User data exists, check if there are any child nodes (fields)
+                    if (snapshot.getChildrenCount() > 0) {
+                        // User has data, continue with your main activity
+                    } else {
+                        // No child nodes (fields) under this UID, send the user to the setup activity
+                        SendUserToSetupActivity();
+                    }
+                } else {
+                    // User data doesn't exist, send the user to the setup activity
+                    SendUserToSetupActivity();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle the error
+            }
+        });
+
     }
-*/
+
+
     private void SendUserToSetupActivity() {
         Intent setupIntent = new Intent(MainActivity.this, EditingProfile.class);
         setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(setupIntent);
         finish();
     }
+
 
 
     @Override
@@ -238,4 +274,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         return false;
     }
+
 }

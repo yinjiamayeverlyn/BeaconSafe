@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -39,22 +40,18 @@ public class EditingProfile extends AppCompatActivity {
         UserContact = (EditText) findViewById(R.id.profileContact);
         EmergencyContact = (EditText) findViewById(R.id.profileEmergencyContact);
         SaveInformationBtn = (Button) findViewById(R.id.profileSaveBtn);
-
         LogOutBtn = (Button) findViewById(R.id.profileLogoutBtn);
 
         LogOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAuth.signOut();
-                SendUserToLoginActivity();
-            }
-
-            private void SendUserToLoginActivity() {
                 Intent loginActivity = new Intent(EditingProfile.this, LoginActivity.class);
                 loginActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(loginActivity);
                 finish();
             }
+
         });
 
         SaveInformationBtn.setOnClickListener(new View.OnClickListener() {
@@ -83,33 +80,36 @@ public class EditingProfile extends AppCompatActivity {
             loadingBar.setMessage("");
             loadingBar.show();
             loadingBar.setCanceledOnTouchOutside(true);
-            HashMap userMap = new HashMap();
-            userMap.put("username",username);
-            userMap.put("age",age);
-            userMap.put("contactNumber",contactNumber);
-            userMap.put("emergencyContact",emergencyContact);
+            HashMap<String, Object> userMap = new HashMap<>();
+            userMap.put("username", username);
+            userMap.put("age", age);
+            userMap.put("contactNumber", contactNumber);
+            userMap.put("emergencyContact", emergencyContact);
 
-            UserRef.updateChildren(userMap).addOnCompleteListener(new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    if(task.isSuccessful()){
-                        SendUserToMainActivity();
-                        Toast.makeText(EditingProfile.this,"Your account is created successfully......",Toast.LENGTH_LONG).show();
-                        loadingBar.dismiss();
-                    }else{
-                        String message = task.getException().getMessage();
-                        Toast.makeText(EditingProfile.this,"Error occured: "+message +"......",Toast.LENGTH_LONG).show();
-                        loadingBar.dismiss();
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            if (currentUser != null) {
+                String uid = currentUser.getUid();
+                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("User").child(uid);
+
+                userRef.updateChildren(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // Data saved successfully
+                            Toast.makeText(EditingProfile.this, "Information saved successfully", Toast.LENGTH_SHORT).show();
+                            Intent homepage = new Intent(EditingProfile.this, MainActivity.class);
+                            homepage.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(homepage);
+                            finish();
+                        } else {
+                            // Error occurred while saving data
+                            String message = task.getException().getMessage();
+                            Toast.makeText(EditingProfile .this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
+                });
+            }
 
-                private void SendUserToMainActivity() {
-                    Intent homepage = new Intent(EditingProfile.this, MainActivity.class);
-                    homepage.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(homepage);
-                    finish();
-                }
-            });
         }
     }
 }

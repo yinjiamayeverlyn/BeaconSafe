@@ -13,5 +13,18 @@
     <string name="logout">Logout</string>
     <string name="notification">Notification</string>
     <string name="emergency_call">Emergency Call</string>
+    <string name="Report_User_Title">Reporting Tools</string>
+    <string name="address">Address</string>
+    <string name="type">Type</string>
+    <string name="details">Details</string>
+    <string name="Phy_Desc">Physical Description of the child</string>
+    <string name="photo">Photo (optional) </string>
+    <string name="hint_address"> Choose from google map</string>
+    <string name="hint_type">Choose from…</string>
+    <string name="hint_details"> Write Something here</string>
+    <string name="hint_phyDesc"> eg. height, weight, hair color, eye color</string>
+    <string name="Submit">Submit</string>
+    <string name="AddImg_Desc">Add Image</string>
+    <string name="title_activity_google_map">Google_Map</string>
 
 </resources>

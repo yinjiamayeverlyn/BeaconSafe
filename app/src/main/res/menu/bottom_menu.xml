@@ -14,9 +14,9 @@
         />
 
     <item
-        android:id="@+id/report"
-        android:title="Report"
-        android:icon="@drawable/button"
+        android:id="@+id/sosButton"
+        android:title="SOS Button"
+        android:icon="@drawable/redcircle"
         />
 
     <item
