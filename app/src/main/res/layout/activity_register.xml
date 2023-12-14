@@ -97,7 +97,7 @@
         <Button
             android:id="@+id/registerBtn"
             android:layout_width="278dp"
-            android:layout_height="49dp"
+            android:layout_height="55dp"
             android:backgroundTint="@color/purple_700"
             android:text="Signup"
             android:textSize="20sp"
@@ -107,7 +107,7 @@
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/registerConfirmPassword"
-            app:layout_constraintVertical_bias="0.1" />
+            app:layout_constraintVertical_bias="0.16" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -19,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.155" />
+        app:layout_constraintVertical_bias="0.109" />
 
     <EditText
         android:id="@+id/profileName"
@@ -28,17 +28,17 @@
         android:layout_margin="20dp"
         android:background="@drawable/border"
         android:backgroundTint="#DAEEFF"
+        android:hint="Full name as IC"
         android:inputType="textEmailAddress"
         android:padding="15dp"
         android:textColor="@color/black"
         android:textColorHint="@color/black"
-        android:hint="Full name as IC"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintTop_toBottomOf="@+id/editingProfile"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/profileAge"
@@ -67,17 +67,17 @@
         android:layout_margin="20dp"
         android:background="@drawable/border"
         android:backgroundTint="#DAEEFF"
+        android:hint="Contact Number"
+        android:inputType="phone"
         android:padding="15dp"
         android:textColor="@color/black"
         android:textColorHint="@color/black"
-        android:inputType="phone"
-        android:hint="Contact Number"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileAge"
-        app:layout_constraintVertical_bias="0.01" />
+        app:layout_constraintTop_toBottomOf="@+id/MaleSelection"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/profileEmergencyContact"
@@ -113,11 +113,11 @@
         app:layout_constraintVertical_bias="0.10" />
 
     <Button
-        android:id="@+id/profileLogoutBtn"
+        android:id="@+id/BtnBack"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:backgroundTint="@color/purple_700"
-        android:text="Logout"
+        android:text="Back"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -125,17 +125,51 @@
         app:layout_constraintTop_toBottomOf="@+id/profileSaveBtn"
         app:layout_constraintVertical_bias="0.10" />
 
+
+    <TextView
+        android:id="@+id/Gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Gender"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.263"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileAge" />
+
+    <CheckBox
+        android:id="@+id/MaleSelection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Male"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.268"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Gender" />
+
+    <CheckBox
+        android:id="@+id/FemaleSelection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="female"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.661"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Gender" />
+
     <TextView
         android:id="@+id/EmailProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginBottom="15dp"
         android:text="Now, you are signed in"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileLogoutBtn"
-        app:layout_constraintVertical_bias="0.711" />
-
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

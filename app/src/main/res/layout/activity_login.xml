@@ -70,7 +70,7 @@
         <Button
             android:id="@+id/loginBtn"
             android:layout_width="278dp"
-            android:layout_height="49dp"
+            android:layout_height="55dp"
             android:backgroundTint="@color/purple_700"
             android:text="Login"
             android:textSize="20sp"
